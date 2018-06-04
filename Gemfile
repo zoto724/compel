@@ -68,3 +68,7 @@ group :development, :test do
 end
 
 gem 'riiif', '~> 1.1'
+
+# Locally-used Gems
+gem 'pg'
+gem 'sidekiq'
