@@ -17,7 +17,7 @@ class Composition < ActiveFedora::Base
     index.as :stored_searchable, :facetable
   end
 
-  #has_many :performances
+  has_many :performances
 
   # This must be included at the end, because it finalizes the metadata
   # schema (by adding accepts_nested_attributes)

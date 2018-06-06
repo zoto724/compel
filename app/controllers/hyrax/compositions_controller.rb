@@ -11,10 +11,15 @@ module Hyrax
     # Use this line if you want to use a custom presenter
     self.show_presenter = MusicWorkPresenter
 
+    def new
+      curation_concern.composer = [current_user.user_key]
+      super
+    end
+
     def show
       super
-      #comp = Composition.find(params[:id])
-      #@performances = comp.performances      
+      comp = Composition.find(params[:id])
+      @performances = comp.performances
     end
   end
 end
