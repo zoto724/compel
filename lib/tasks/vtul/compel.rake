@@ -28,7 +28,12 @@ namespace :compel do
 
   desc 'Create COMPEL default CollectionType.'
   task create_default_collection_type: :environment do
-    Hyrax::CollectionType.find_or_create_by({title: "Collection", machine_id: "DefaultCompelCollection", description: "Default COMPEL collection type"})
-    puts "Created default COMPEL collection type."
+    default_collection_type_settings={title: "Collection", machine_id: "DefaultCompelCollection", description: "Default COMPEL collection type"}
+    if Hyrax::CollectionType.find_by(default_collection_type_settings)
+      puts "Default COMPEL collection type already exists."
+    else
+      Hyrax::CollectionType.create(default_collection_type_settings)
+      puts "Created default COMPEL collection type."
+    end
   end
 end
