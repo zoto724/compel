@@ -72,3 +72,5 @@ gem 'riiif', '~> 1.1'
 # Locally-used Gems
 gem 'pg'
 gem 'sidekiq'
+gem 'hydra-role-management'
+
