@@ -24,9 +24,6 @@ module Compel
       property :medium, predicate: ::RDF::Vocab::DC.medium do |index|
         index.as :stored_searchable
       end
-      property :location, predicate: ::RDF::Vocab::DC.Location do |index|
-        index.as :stored_searchable
-      end
     end
   end
 end

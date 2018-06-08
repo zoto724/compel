@@ -77,7 +77,6 @@ class CatalogController < ApplicationController
     config.add_index_field solr_name("genre", :stored_searchable), label: "Genre", link_to_search: solr_name("Genre", :facetable)
     config.add_index_field solr_name("software", :stored_searchable), label: "Software"
     config.add_index_field solr_name("medium", :stored_searchable), label: "Medium"
-    config.add_index_field solr_name("location", :stored_searchable), label: "Location"
 
     config.add_index_field solr_name("contributor", :stored_searchable), itemprop: 'contributor', link_to_search: solr_name("contributor", :facetable)
     config.add_index_field solr_name("proxy_depositor", :symbol), label: "Depositor", helper_method: :link_to_profile

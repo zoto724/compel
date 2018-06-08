@@ -61,8 +61,4 @@ class SolrDocument
   def medium
     self[Solrizer.solr_name('medium')]
   end
-
-  def location
-    self[Solrizer.solr_name('location')]
-  end
 end

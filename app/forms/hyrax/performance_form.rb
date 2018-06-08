@@ -6,7 +6,7 @@ module Hyrax
     self.model_class = ::Performance
     self.terms -= [:creator, :keyword, :subject, :license, :rendering_ids]
     self.terms += [:composition_id, :instruments, :date, :tags,
-                   :length, :genre, :software, :medium, :location, :performer]
+                   :length, :genre, :software, :medium, :performer]
 
     self.required_fields = [:title, :instruments]
 
