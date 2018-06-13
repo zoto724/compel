@@ -1,0 +1,13 @@
+<%# Modified from Hyrax Gem 2.1.0 to show personal statement %>
+<div class="row profile">
+  <div class="col-xs-3">
+    <%= render 'left_sidebar' %>
+  </div>
+  <!-- right col -->
+  <div class="col-xs-9">
+    <%# COMPEL Modification: begin %>
+    <%= @user.personal_statement.html_safe if @user.personal_statement %>
+    <%# COMPEL Modification: end %>
+    <%= render 'profile_tabs', presenter: @presenter %>
+  </div>
+</div>

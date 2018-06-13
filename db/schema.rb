@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180606201220) do
+ActiveRecord::Schema.define(version: 20180612125729) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -497,6 +497,14 @@ ActiveRecord::Schema.define(version: 20180606201220) do
     t.index ["user_id"], name: "index_uploaded_files_on_user_id"
   end
 
+  create_table "user_links", force: :cascade do |t|
+    t.string "link"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_user_links_on_user_id"
+  end
+
   create_table "user_stats", force: :cascade do |t|
     t.integer "user_id"
     t.datetime "date"
@@ -546,6 +554,7 @@ ActiveRecord::Schema.define(version: 20180606201220) do
     t.binary "zotero_token"
     t.string "zotero_userid"
     t.string "preferred_locale"
+    t.text "personal_statement"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

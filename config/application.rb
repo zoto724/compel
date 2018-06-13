@@ -18,6 +18,7 @@ module Compel
     # Overrides
     config.to_prepare do
       Hyrax::HomepageController.prepend Hyrax::HomepageControllerOverride
+      Hyrax::Dashboard::ProfilesController.prepend Hyrax::Dashboard::ProfilesControllerOverride
     end
   end
 end
