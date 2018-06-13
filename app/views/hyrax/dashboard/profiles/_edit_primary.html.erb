@@ -1,0 +1,108 @@
+<%# Modified from Hyrax Gem 2.1.0 %>
+<%# - Adding display_name, personal_statement, and user_links, js handler %>
+<%= form_for @user,
+             url: hyrax.dashboard_profile_path(@user.to_param),
+             html: { multipart: true, class: 'form-horizontal' } do |f| %>
+
+  <%# COMPEL Modification: begin %>
+  <div class="form-group">
+    <%= f.label :display_name, 'Name', class: 'col-xs-4 control-label' %>
+    <div class="col-xs-8">
+       <%= f.text_field :display_name, class: "form-control" %>
+    </div>
+  </div><!-- .form-group -->
+
+  <div class="form-group">
+    <%= f.label :personal_statement, 'Personal statement', class: 'col-xs-4 control-label' %>
+    <div class="col-xs-8">
+       <%= f.text_area :personal_statement, class: "form-control" %>
+    </div>
+  </div><!-- .form-group -->
+  <%# COMPEL Modification: end %>
+
+  <div class="form-group">
+    <%= f.label :avatar, '<i class="glyphicon glyphicon-camera"></i> Change picture'.html_safe, class: "col-xs-4 control-label" %>
+    <div class="col-xs-8">
+      <%= image_tag @user.avatar.url(:thumb) if @user.avatar? %>
+      <%= f.file_field :avatar %>
+      <%= f.hidden_field :avatar_cache %>
+      <span class="help-block">JPG, GIF, or PNG (less than 2MB)</span>
+
+      <div class="checkbox">
+        <%= f.label :remove_avatar do %>
+          <%= f.check_box :remove_avatar %>
+          Delete picture
+          <a href="#" id="delete_picture_help" data-toggle="popover" data-content="If you would like to remove your picture entirely, check the box and save your profile." data-original-title="Delete Picture"><i class="glyphicon glyphicon-question-sign"></i></a>
+        <% end %>
+      </div>
+    </div>
+  </div><!-- .form-group -->
+
+  <% if Hyrax.config.arkivo_api? %>
+    <%= render partial: 'zotero', locals: { f: f, user: @user } %>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :orcid, class: 'col-xs-4 control-label' do %>
+      <%= orcid_label %>
+    <% end %>
+    <div class="col-xs-8">
+       <%= f.text_field :orcid, class: "form-control" %>
+    </div>
+  </div><!-- .form-group -->
+
+  <div class="form-group">
+    <%= f.label :twitter_handle, '<i class="fa fa-twitter"></i> Twitter Handle'.html_safe, class: 'col-xs-4 control-label' %>
+    <div class="col-xs-8">
+       <%= f.text_field :twitter_handle, class: "form-control" %>
+    </div>
+  </div><!-- .form-group -->
+
+  <div class="form-group">
+    <%= f.label :facebook_handle, '<i class="fa fa-facebook"></i> Facebook Handle'.html_safe, class: 'col-xs-4 control-label' %>
+    <div class="col-xs-8">
+       <%= f.text_field :facebook_handle, class: "form-control" %>
+    </div>
+  </div><!-- .form-group -->
+
+  <div class="form-group">
+    <%= f.label :googleplus_handle, '<i class="fa fa-google-plus"></i> Google+ Handle'.html_safe, class: 'col-xs-4 control-label' %>
+    <div class="col-xs-8">
+       <%= f.text_field :googleplus_handle, class: "form-control" %>
+    </div>
+  </div><!-- .form-group -->
+
+  <%# COMPEL Modification: begin %>
+  <div class="form-group">
+    <% if !@user.user_links.blank? %>
+      <%= f.label :user_links, 'My Websites', class: 'col-xs-4 control-label', id: "existing-links-label" %>
+      <ul class="col-xs-8" id="existing-links-wrapper">
+      <% @user.user_links.each do | link | %>
+        <li class="existing-link" id="link-id-<%= link.id %>" data-user-id="<%= @user.user_key.gsub('.', '-dot-') %>"  data-link-id="<%= link.id %>"><%= link.link %> <span class="remove-link-trigger"><%= link_to "Click to remove", "#" %></span></li>
+      <% end %>
+      </ul>
+    <% end %>
+    <%= f.label :user_links, 'Add Website', class: 'col-xs-4 control-label' %>
+    <div class="col-xs-8" id="user-links-wrapper">
+       <%= text_field_tag "user_links[]", nil, class: "multi-value multi-text-field form-control user-link-input" %>
+    </div>
+    <div class="col-xs-4">&nbsp;</div>
+    <div class="col-xs-8">
+      <button type="button" class="btn btn-link add" id="add-link-trigger">
+        <span class='glyphicon glyphicon-plus'></span>
+        <span class="controls-add-text">Add another Website</span>
+      </button>
+    </div>
+  </div><!-- .form-group -->
+  <%# COMPEL Modification: end %>
+
+  <%= render 'trophy_edit', trophies: @trophies %>
+
+  <%= f.button '<i class="glyphicon glyphicon-save"></i> Save Profile'.html_safe, type: 'submit', class: "btn btn-primary" %>
+<% end %>
+
+<%# COMPEL Modification: begin %>
+<script>
+  userLinksHandler.init();
+</script>
+<%# COMPEL Modification: end %>

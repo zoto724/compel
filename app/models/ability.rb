@@ -17,5 +17,9 @@ class Ability
     # if user_groups.include? 'special_group'
     #   can [:create], ActiveFedora::Base
     # end
+
+    # Allow users to delete their own user_links
+    can [:user_link_delete], ::User, id: current_user.id
+
   end
 end
