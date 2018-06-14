@@ -71,3 +71,6 @@ en:
         creator: Composer
         date: Date of Performance
         related_url: Peformance Link
+    homepage:
+      admin_sets:
+        link: "<span class='red'>+ Explore</span> More"

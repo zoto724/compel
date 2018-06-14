@@ -1,3 +1,5 @@
+@import 'colors';
+
 .navbar-default {
   background: none;
   border: none;
@@ -9,6 +11,7 @@
     li {
       a {
         color: rgba(0,0,0,1.00);
+        font-family: Raleway-Bold;
         font-size: 11px;
         letter-spacing: 1.5px;
         text-decoration: none;
@@ -25,11 +28,18 @@
       border-bottom: none;
       padding-bottom: 3px;
     }
-
-
-
-
   }
+}
+@media (max-width: 768px) {
+    .navbar-nav {
+        .dropdown.open {
+          border-top: 5px solid $red;
+          border-bottom: 5px solid $red;
+          a[role="button"]:hover {
+            border-bottom: none;
+          }
+        }
+    }
 }
 @media (min-width: 768px) {
   .navbar-nav {

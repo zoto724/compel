@@ -1,7 +1,40 @@
-nav#masthead {
-  min-height: 45px;
-  height: 45px;
+@import 'colors';
+
+nav#masthead, .dashboard nav#masthead {
+  min-height: 100px;
+  height: 100px;
   width: 100%;
-  background: rgba(252, 71, 59, 1.00);
-  border: none;
+  background: $red;
+  border-bottom: 5px solid $dark-grey;
+
+  .home-header {
+    display: inline-block;
+    h1 {
+      display: inline-block;
+      font-family: Raleway-Black;
+      color: white;
+      font-size: 60px;
+    }
+    h2 {
+      display: inline-block;
+      font-family: Raleway-Medium;
+      font-size: 23px;
+    }
+  }
+  .search-wrapper {
+    margin-top: 25px;
+  }
+}
+@media (max-width: 992px) {
+  nav#masthead {
+    height: 190px;
+  }
+}
+@media(min-width: 993px) and (max-width: 1062px) {
+  nav#masthead .home-header h1 {
+    font-size: 50px;
+  }
+  nav#masthead .home-header h2 {
+    font-size: 20px;
+  }
 }

@@ -9,20 +9,13 @@
   <body>
     <a href="#skip_to_content" class="sr-only">Skip to Content</a>
     <div class="<%= 'homepage' if current_page?('/') %>">
-    <div class="background <%= 'background_home' if current_page?('/') %>">
-      <div id="background1"></div>
-      <div id="background2"></div>
-      <div id="background3"></div>
-      <div id="background4"></div>
-      <div id="background5"></div>
-    </div>
 
     <%= render partial: '/masthead' %>
     <%= render '/controls' %>
     <%= content_for(:navbar) %>
     <%= content_for(:precontainer_content) %>
     <% container_class = content_for?(:container_class) ? yield(:container_class) : 'container' %>
-    <div id="content-wrapper" class="<%= container_class %>" role="main">
+    <div id="content-wrapper"  role="main">
       <a name="skip_to_content"></a>
   
       <% if content_for?(:sidebar) %>
@@ -43,7 +36,7 @@
         <% sidebar_class = container_class == 'container-fluid' ? 'col-lg-2 col-lg-pull-10 ' : '' %>
         <div id="sidebar" class="col-xs-12 col-sm-3 col-sm-pull-9 <%= sidebar_class %>sidebar"><%= yield :sidebar %></div>
       <% else %>
-        <div class="col-xs-12">
+        <div class="<%= 'col-xs-12' if !current_page?('/') %>">
           <%= render '/flash_msg' %>
           <%= render_breadcrumbs builder: Hyrax::BootstrapBreadcrumbsBuilder %>
           <% if content_for?(:page_header) %>
@@ -53,13 +46,11 @@
               </div>
             </div>
           <% end %>
-          <%= link_to "Compel", root_path, class: 'logo' %>          
           <%= render '/hyrax/homepage/hero' if current_page?('/') %>          
-
           <%= content_for?(:content) ? yield(:content) : yield %>
         </div>
       <% end %>
-
+      <%= render '/shared/footer' %>
     </div><!-- /#content-wrapper -->
     <%= render 'shared/ajax_modal' %>
     </div>

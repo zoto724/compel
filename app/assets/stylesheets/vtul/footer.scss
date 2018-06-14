@@ -1,6 +1,10 @@
+@import 'colors';
+
 footer.site-footer {
+  background-color: $red;
   min-height: 140px;
   height: auto;
+  border: none;
   ul.nav {
     float: none;
     text-align: center;
@@ -12,11 +16,15 @@ footer.site-footer {
   }
   .logo {
     display: block;
-    margin-top: 10px;
-    margin-bottom: 15px;
-    width: 250px;
     img {
+      max-width: 477px;
       width: 100%;
+      margin: 0 auto;
     }
   }
 }
+.navbar-inverse.site-footer .navbar-nav > li > a {
+  color: white;
+  font-size: 16px;
+}
+

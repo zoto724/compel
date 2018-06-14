@@ -1,6 +1,10 @@
+@import 'colors';
+
+html { padding: 0; }
 body {
-  font-family: din;
+  font-family: Raleway-Regular;
   letter-spacing: .5px;
+  padding: 0;
 }
 .col-centered{
   float: none;
@@ -41,4 +45,8 @@ a.logo:hover {
 }
 a.logo, a.logo:hover, a.logo:active, a.logo:visited {
   text-decoration: none;
+}
+
+.red {
+  color: $red;
 }
