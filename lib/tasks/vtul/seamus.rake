@@ -56,8 +56,7 @@ namespace :seamus do
       puts "Error: "+ae.message
       puts 'To run: bin/rake seamus:import_authors["input.xml"]'
     end
-
-    end
+  end
 
   desc 'Extract SEAMUS XML - Items. To run: bin/rake seamus:extract_items["input.xml","output.json"]'
   task :extract_items, [:input_xml_file, :output_json_file] => :environment do |task, args|
@@ -84,6 +83,40 @@ namespace :seamus do
     rescue ArgumentError => ae
       puts "Error: "+ae.message
       puts 'To run: bin/rake seamus:extract_items["input.xml", "output.json"]'
+    end
+  end
+
+  desc 'Import SEAMUS XML - Items. To run: bin/rake seamus:import_items["input.xml"]'
+  task :import_items, [:input_xml_file] => :environment do |task, args|
+    begin
+      input_xml_file = args.input_xml_file
+      if args.input_xml_file.nil?
+        raise ArgumentError.new("Valid input xml file must be provided.")
+      end
+
+      puts "Attempting to read input xml file: " + input_xml_file
+
+      content = ""
+      open(input_xml_file) do |s| content = s.read end
+
+      authors = Hash.new
+      WordPress.parse_wp_authors(content) do | wp_author |
+        authors[wp_author.login] = wp_author
+      end
+
+
+      importer = SeamusImporter.new
+      WordPress.parse_items(content) do | item |
+        owner = authors[item.owner]
+        importer.import_item(item, owner)
+      end
+
+      puts "Import completed."
+      ActiveFedora::Base.reindex_everything
+      puts "Index Updated."
+    rescue ArgumentError => ae
+      puts "Error: "+ae.message
+      puts 'To run: bin/rake seamus:import_items["input.xml"]'
     end
   end
 end

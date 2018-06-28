@@ -7,6 +7,77 @@ class SeamusImporter
                   :member_soundcloud_link
   end  
 
+  def is_performance?(item)
+    clip = item.metadata.performance_clip
+    recording = item.metadata.link_to_recording
+    if (clip.nil? || clip.empty?) && (recording.nil? || recording.empty?)
+      return false
+    else
+      return true
+    end
+  end
+
+  def create_composition(item, owner)
+    puts "... Creating Composition"
+    composition = Composition.new
+    composition.creator = [owner.email]
+    composition.depositor = owner.email
+    composition.date_created = [item.metadata.year_of_composition]
+    composition.title = [item.metadata.subtitle, item.title]
+    composition.duration = item.metadata.duration
+    composition.source = [item.metadata.link_to_score_resources]
+    composition.subject = item.metadata.instrumentation
+    composition.subject = ["(none)"] if composition.subject.empty?
+    composition.description = [item.body]
+    composition.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+    composition.save!
+    puts "... Composition Created Successfully." + composition.inspect
+    create_composition_derivatives(item)
+    composition
+  end
+  
+  def create_performance(item, composition)
+    puts "... Creating Performance"
+    performance = Performance.new
+    performance.creator = composition.creator
+    performance.depositor = composition.depositor
+    performance.composition_id = composition.id
+    performance.title = [item.metadata.subtitle, item.title]
+    performance.date_created = [item.metadata.year_of_composition]
+    performance.contributor = composition.creator
+    performance.subject = item.metadata.instrumentation
+    performance.subject = ["(none)"] if performance.subject.empty?
+    performance.description = [item.body]
+    performance.duration = item.metadata.duration
+    performance.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+    performance.save!
+    puts "... Performance Created Successfully." + performance.inspect
+    create_performance_derivatives(item)
+    performance
+  end
+
+  def create_composition_derivatives(item)
+    puts "... Creating Composition Derivatives [TODO LIBTD-1317]"
+  end
+
+  def create_performance_derivatives(item)
+    puts "... Creating Performance Derivatives [TODO LIBTD-1317]"
+  end
+
+  def import_item(item, owner)
+    printf "--- Importing: %s (%s, %s)\n", item.title, item.owner, item.url
+    puts item.inspect
+    # NOTE: There's no explicit distinction in the SEAMUS wordpress dump 
+    #       indicating whether an item/article is a composition or performance.
+    #       By default, a composition will always be created.
+    #       If audio or video data exists, we'll create a performance and link
+    #       to the composition.
+    #       Currently in COMPEL, a performance needs to be linked to an 
+    #       existing composition.
+    composition = create_composition(item, owner)
+    create_performance(item, composition) if is_performance?(item)
+  end
+
   def import_wp_author(wp_author)
     printf "--- Importing: %s (%s, %s, %s)\n", wp_author.id, wp_author.login, wp_author.email, wp_author.display_name
 
@@ -63,6 +134,9 @@ class SeamusImporter
     end
   end
 
+  # TODO: It's not as simple as taking the basename of the parsed URL. 
+  #       Will probably need to have social-media specific parsers to
+  #       get the handles.
   def handle(link)
     File.basename(URI.parse(link).path) unless (link.nil? || link.empty?)
   end
