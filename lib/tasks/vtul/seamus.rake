@@ -1,5 +1,6 @@
 # Based on: https://github.com/thomasfl/wordpress_import
-require 'tasks/vtul/wordpress_import'
+require 'tasks/vtul/wordpress_parser'
+require 'tasks/vtul/seamus_importer'
 require 'json'
 
 namespace :seamus do
@@ -32,7 +33,33 @@ namespace :seamus do
     end
   end
 
-  desc 'Extract SEAMUS XML - Items. To run: bin/rake seamus:extract_items["input.xml", "output.json"]'
+  desc 'Import SEAMUS XML - Authors. To run: bin/rake seamus:import_authors["input.xml"]'
+  task :import_authors, [:input_xml_file] => :environment do |task, args|
+    begin
+      input_xml_file = args.input_xml_file
+      if args.input_xml_file.nil? 
+        raise ArgumentError.new("Valid input xml file must be provided.")
+      end
+
+      puts "Attempting to read input xml file: " + input_xml_file
+
+      content = ""
+      open(input_xml_file) do |s| content = s.read end
+
+      importer = SeamusImporter.new
+      WordPress.parse_wp_authors(content) do | wp_author |
+        importer.import_wp_author(wp_author)
+      end
+
+      puts "Import completed."
+    rescue ArgumentError => ae
+      puts "Error: "+ae.message
+      puts 'To run: bin/rake seamus:import_authors["input.xml"]'
+    end
+
+    end
+
+  desc 'Extract SEAMUS XML - Items. To run: bin/rake seamus:extract_items["input.xml","output.json"]'
   task :extract_items, [:input_xml_file, :output_json_file] => :environment do |task, args|
     begin
       input_xml_file = args.input_xml_file
