@@ -7,63 +7,6 @@ class SeamusImporter
                   :member_soundcloud_link
   end  
 
-  def is_performance?(item)
-    clip = item.metadata.performance_clip
-    recording = item.metadata.link_to_recording
-    if (clip.nil? || clip.empty?) && (recording.nil? || recording.empty?)
-      return false
-    else
-      return true
-    end
-  end
-
-  def create_composition(item, owner)
-    puts "... Creating Composition"
-    composition = Composition.new
-    composition.creator = [owner.email]
-    composition.depositor = owner.email
-    composition.date_created = [item.metadata.year_of_composition]
-    composition.title = [item.metadata.subtitle, item.title]
-    composition.duration = item.metadata.duration
-    composition.source = [item.metadata.link_to_score_resources]
-    composition.subject = item.metadata.instrumentation
-    composition.subject = ["(none)"] if composition.subject.empty?
-    composition.description = [item.body]
-    composition.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
-    composition.save!
-    puts "... Composition Created Successfully." + composition.inspect
-    create_composition_derivatives(item)
-    composition
-  end
-  
-  def create_performance(item, composition)
-    puts "... Creating Performance"
-    performance = Performance.new
-    performance.creator = composition.creator
-    performance.depositor = composition.depositor
-    performance.composition_id = composition.id
-    performance.title = [item.metadata.subtitle, item.title]
-    performance.date_created = [item.metadata.year_of_composition]
-    performance.contributor = composition.creator
-    performance.subject = item.metadata.instrumentation
-    performance.subject = ["(none)"] if performance.subject.empty?
-    performance.description = [item.body]
-    performance.duration = item.metadata.duration
-    performance.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
-    performance.save!
-    puts "... Performance Created Successfully." + performance.inspect
-    create_performance_derivatives(item)
-    performance
-  end
-
-  def create_composition_derivatives(item)
-    puts "... Creating Composition Derivatives [TODO LIBTD-1317]"
-  end
-
-  def create_performance_derivatives(item)
-    puts "... Creating Performance Derivatives [TODO LIBTD-1317]"
-  end
-
   def import_item(item, owner)
     printf "--- Importing: %s (%s, %s)\n", item.title, item.owner, item.url
     puts item.inspect
@@ -114,77 +57,169 @@ class SeamusImporter
     profile.member_twitter_link = get_first_class_href(profile_page, '.member-twitter-link')
     profile.member_facebook_link = get_first_class_href(profile_page, '.member-facebook-link')
     profile.member_google_link = get_first_class_href(profile_page, '.member-google-link')
-    profile.member_soundcloud_link = get_first_class_href(profile_page, '.member-soundcloud-link') 
+    profile.member_soundcloud_link = get_first_class_href(profile_page, '.member-soundcloud-link')
     return profile
   end
 
-  def get_first_class_src(page, class_name)
-    page.css(class_name).css('img').first['src'] unless page.css(class_name).css('img').first.nil?
-  end
+  protected
 
-  def get_first_class_href(page, class_name) 
-    page.css(class_name).css('a').first['href'] unless page.css(class_name).css('a').first.nil?
-  end
-
-  def personal_statement(profile)
-    if profile.member_role.empty?
-      profile.short_bio.to_s
-    else 
-      (profile.member_role.to_s + ". " + profile.short_bio.to_s)
+    def is_performance?(item)
+      clip = item.metadata.performance_clip
+      recording = item.metadata.link_to_recording
+      if (clip.nil? || clip.empty?) && (recording.nil? || recording.empty?)
+        return false
+      else
+        return true
+      end
     end
-  end
 
-  # TODO: It's not as simple as taking the basename of the parsed URL. 
-  #       Will probably need to have social-media specific parsers to
-  #       get the handles.
-  def handle(link)
-    File.basename(URI.parse(link).path) unless (link.nil? || link.empty?)
-  end
+    def create_composition(item, owner)
+      puts "... Creating Composition"
+      composition = Composition.new
+      composition.creator = [owner.email]
+      composition.depositor = owner.email
+      composition.date_created = [item.metadata.year_of_composition]
+      composition.title = [item.title]
+      composition.duration = item.metadata.duration
+      composition.source = [item.metadata.link_to_score_resources]
+      composition.subject = item.metadata.instrumentation
+      composition.subject = ["(none)"] if composition.subject.empty?
+      composition.description = [item.body, item.metadata.subtitle]
 
-  def create_user(wp_author, user_profile)
-    puts "... Attempting to create new COMPEL user: " + wp_author.email
+      # For now, all provided SEAMUS items appear to be public
+      composition.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
 
-    user = User.new({email: wp_author.email})
-    user.display_name = wp_author.display_name
-    user.password = SecureRandom.uuid
-    user.personal_statement = personal_statement(user_profile)
-    user.twitter_handle = handle(user_profile.member_twitter_link)
-    user.facebook_handle = handle(user_profile.member_facebook_link)
-    user.googleplus_handle = handle(user_profile.member_google_link)
+      composition.save!
+      puts "... Composition Created Successfully." + composition.inspect
+      create_composition_derivatives(item)
+      composition
+    end
+  
+    def create_performance(item, composition)
+      puts "... Creating Performance"
+      performance = Performance.new
+      performance.creator = composition.creator
+      performance.depositor = composition.depositor
+      performance.composition_id = composition.id
+      performance.title = [item.title]
+      performance.date_created = [item.metadata.year_of_composition]
+      performance.contributor = composition.creator
+      performance.subject = item.metadata.instrumentation
+      performance.subject = ["(none)"] if performance.subject.empty?
+      performance.description = [item.body, item.metadata.subtitle]
+      performance.duration = item.metadata.duration
+
+      # For now, all provided SEAMUS items appear to be public
+      performance.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+
+      performance.save!
+      puts "... Performance Created Successfully." + performance.inspect
+      create_performance_derivatives(item)
+      performance
+    end
+
+    def create_composition_derivatives(item)
+      puts "... Creating Composition Derivatives [TODO LIBTD-1317]"
+    end
+
+    def create_performance_derivatives(item)
+      puts "... Creating Performance Derivatives [TODO LIBTD-1317]"
+    end
+
+    def get_first_class_src(page, class_name)
+      page.css(class_name).css('img').first['src'] unless page.css(class_name).css('img').first.nil?
+    end
+
+    def get_first_class_href(page, class_name) 
+      page.css(class_name).css('a').first['href'] unless page.css(class_name).css('a').first.nil?
+    end
+
+    def personal_statement(profile)
+      if profile.member_role.empty?
+        profile.short_bio.to_s
+      else 
+        (profile.member_role.to_s + ". " + profile.short_bio.to_s)
+      end
+    end
+
+    def google_plus_handle(uri)
+      # Google plus handles seem more complicated to parse.
+      # Assumes that the uri is already known to be a google plus uri
+      path_fragments = uri.path.split("/").reject{ |s| s.empty? }
+      if path_fragments.size < 1
+        return nil
+      elsif path_fragments.first[0] == '+'
+        return path_fragments.first[1..-1] #remove the '+'
+      elsif path_fragments.size == 1
+        return path_fragments.first
+      elsif (path_fragments.size >= 3) && (path_fragments.first) == 'u' && (path_fragments.second == '0')
+        return path_fragments.third
+      else
+        return nil # unable to parse
+      end
+    end
+
+    def handle(link)
+      return link if link.nil?
+
+      link_uri = URI(link)
+      if (link_uri.host == "plus.google.com") || (link_uri.host == "google.com")
+        return google_plus_handle(link_uri)
+      else
+        # The following seems to work for twitter and facebook.
+        # Returns the first part of the path as the handle
+        # Otherwise, returns nil
+        return link_uri.path.split("/").reject{ |s| s.empty? }.first
+      end
+    end
+
+    def create_user(wp_author, user_profile)
+      puts "... Attempting to create new COMPEL user: " + wp_author.email
+
+      user = User.new({email: wp_author.email})
+      user.display_name = wp_author.display_name
+      user.password = SecureRandom.uuid
+      user.personal_statement = personal_statement(user_profile)
+      user.twitter_handle = handle(user_profile.member_twitter_link)
+      user.facebook_handle = handle(user_profile.member_facebook_link)
+      user.googleplus_handle = handle(user_profile.member_google_link)
         
-    if !( user_profile.member_website_link.nil? || user_profile.member_website_link.blank?)
-      wlink = UserLink.find_or_create_by({link: user_profile.member_website_link})
-      wlink.link = user_profile.member_website_link
-      user.user_links << wlink
-    end
+      if !( user_profile.member_website_link.nil? || user_profile.member_website_link.blank?)
+        wlink = UserLink.find_or_create_by({link: user_profile.member_website_link})
+        wlink.link = user_profile.member_website_link
+        user.user_links << wlink
+      end
 
-    # TODO: Potentially add Soundcloud as a website (uncomment below)
-    #       or add as new social media via LIBTD-1385
-    #if !( user_profile.member_soundcloud_link.nil? || user_profile.member_soundcloud_link.blank?)
-    #  slink = UserLink.find_or_create_by({link: user_profile.member_soundcloud_link})
-    #  slink.link = user_profile.member_soundcloud_link
-    #  user.user_links << slink
-    #end
+      # TODO: Potentially add Soundcloud as a website (uncomment below)
+      #       or add as new social media via LIBTD-1385
+      #if !( user_profile.member_soundcloud_link.nil? || user_profile.member_soundcloud_link.blank?)
+      #  slink = UserLink.find_or_create_by({link: user_profile.member_soundcloud_link})
+      #  slink.link = user_profile.member_soundcloud_link
+      #  user.user_links << slink
+      #end
 
-    begin
-      # Initially try to save without the profile image
-      user.save!
-      puts "... User imported to COMPEL: "+user.inspect
-    rescue ActiveRecord::RecordInvalid => ri_error
-      puts "!!!!! User creation failed: " + ri_error.message
-    end
+      begin
+        # Initially try to save without the profile image
+        user.save!
+        puts "... User imported to COMPEL: "+user.inspect
+      rescue ActiveRecord::RecordInvalid => ri_error
+        puts "!!!!! User creation failed: " + ri_error.message
+      end
 
-    # Now, try to save the profile image url
-    # If it fails, that's okay.
-    # There are all sorts of reasons why this might fail:
-    #   Image is larger than 2 MB
-    #   Image doesn't exist, etc.
-    user.remote_avatar_url = user_profile.member_profile_img_src
-    begin
-      user.save!
-      puts "... User avatar uploaded to COMPEL."
-    rescue ActiveRecord::RecordInvalid => ri_error
-      puts "!!!!! User avatar upload failed: " + ri_error.message
+      # Now, try to save the profile image url
+      # If it fails, that's okay.
+      # There are all sorts of reasons why this might fail:
+      #   Image is larger than allowed by the AvatarValidator
+      #   Image doesn't exist (404 error?), etc.
+      #
+      # TODO: Consider breaking out this saving of derivatives into a separate 
+      #       method like for items.
+      user.remote_avatar_url = user_profile.member_profile_img_src
+      begin
+        user.save!
+        puts "... User avatar uploaded to COMPEL."
+      rescue ActiveRecord::RecordInvalid => ri_error
+        puts "!!!!! User avatar upload failed: " + ri_error.message
+      end
     end
-  end
 end
