@@ -34,7 +34,7 @@ namespace :seamus do
 
       # TODO: Allow to pass in output file as parameter for the hash of scraped profiles
       #       For now, write to "output_json_file"+".scraped_profiles"
-      wp_authors_file = File.new(output_json_file+".scraped_profiles",'w+')
+      wp_authors_profile_file = File.new(output_json_file+".scraped_profiles",'w+')
       wp_authors_profile_file.puts JSON.pretty_generate(JSON.parse(wp_author_profiles.to_json))
       puts "Output json file of scraped profiles written to: "+output_json_file+".scraped_profiles"
     rescue ArgumentError => ae
