@@ -150,10 +150,6 @@ class SeamusImporter
         return nil
       elsif path_fragments.first[0] == '+'
         return path_fragments.first[1..-1] #remove the '+'
-      elsif path_fragments.size == 1
-        return path_fragments.first
-      elsif (path_fragments.size >= 3) && (path_fragments.first) == 'u' && (path_fragments.second == '0')
-        return path_fragments.third
       else
         return nil # unable to parse
       end
