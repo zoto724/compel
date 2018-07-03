@@ -108,7 +108,8 @@ class SeamusImporter
       performance.subject = ["(none)"] if performance.subject.empty?
       performance.description = [item.body, item.metadata.subtitle]
       performance.duration = item.metadata.duration
-
+      performance.related_url = performance_links(item)
+  
       # For now, all provided SEAMUS items appear to be public
       performance.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
 
@@ -116,6 +117,17 @@ class SeamusImporter
       puts "... Performance Created Successfully." + performance.inspect
       create_performance_derivatives(item)
       performance
+    end
+
+    def performance_links(item)
+      links = []
+      if !((item.metadata.link_to_recording.nil?) || (item.metadata.link_to_recording.empty?))
+        links << item.metadata.link_to_recording
+      end
+      if !((item.metadata.performance_clip.nil?) || (item.metadata.performance_clip.empty?))
+        links << item.metadata.performance_clip
+      end
+      return links
     end
 
     def create_composition_derivatives(item)
