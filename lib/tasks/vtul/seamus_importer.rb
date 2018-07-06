@@ -91,7 +91,6 @@ class SeamusImporter
 
       composition.save!
       puts "... Composition Created Successfully." + composition.inspect
-      create_composition_derivatives(item)
       composition
     end
   
@@ -115,7 +114,6 @@ class SeamusImporter
 
       performance.save!
       puts "... Performance Created Successfully." + performance.inspect
-      create_performance_derivatives(item)
       performance
     end
 
@@ -128,14 +126,6 @@ class SeamusImporter
         links << item.metadata.performance_clip
       end
       return links
-    end
-
-    def create_composition_derivatives(item)
-      puts "... Creating Composition Derivatives [TODO LIBTD-1317]"
-    end
-
-    def create_performance_derivatives(item)
-      puts "... Creating Performance Derivatives [TODO LIBTD-1317]"
     end
 
     def get_first_class_src(page, class_name)
@@ -198,20 +188,30 @@ class SeamusImporter
         user.user_links << wlink
       end
 
-      # TODO: Potentially add Soundcloud as a website (uncomment below)
-      #       or add as new social media via LIBTD-1385
-      #if !( user_profile.member_soundcloud_link.nil? || user_profile.member_soundcloud_link.blank?)
-      #  slink = UserLink.find_or_create_by({link: user_profile.member_soundcloud_link})
-      #  slink.link = user_profile.member_soundcloud_link
-      #  user.user_links << slink
-      #end
+      # TODO: Potentially add as new social media via LIBTD-1385
+      # For now, add as website
+      if !( user_profile.member_soundcloud_link.nil? || user_profile.member_soundcloud_link.blank?)
+        slink = UserLink.find_or_create_by({link: user_profile.member_soundcloud_link})
+        slink.link = user_profile.member_soundcloud_link
+        user.user_links << slink
+      end
 
       begin
         # Initially try to save without the profile image
         user.save!
         puts "... User imported to COMPEL: "+user.inspect
+
+        upload_user_avatar(user, user_profile)
       rescue ActiveRecord::RecordInvalid => ri_error
         puts "!!!!! User creation failed: " + ri_error.message
+      end
+
+    end
+ 
+    def upload_user_avatar(user, user_profile)
+      if user_profile.member_profile_img_src == 'https://www.seamusonline.org/wp-content/uploads/2014/09/Circuit-Pattern-Yellow-485x485.jpg'
+        puts "... User avatar is SEAMUS default. Avatar left blank."
+        return
       end
 
       # Now, try to save the profile image url
@@ -219,15 +219,12 @@ class SeamusImporter
       # There are all sorts of reasons why this might fail:
       #   Image is larger than allowed by the AvatarValidator
       #   Image doesn't exist (404 error?), etc.
-      #
-      # TODO: Consider breaking out this saving of derivatives into a separate 
-      #       method like for items.
       user.remote_avatar_url = user_profile.member_profile_img_src
       begin
         user.save!
         puts "... User avatar uploaded to COMPEL."
       rescue ActiveRecord::RecordInvalid => ri_error
         puts "!!!!! User avatar upload failed: " + ri_error.message
-      end
+      end 
     end
 end

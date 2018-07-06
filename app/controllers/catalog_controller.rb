@@ -69,7 +69,7 @@ class CatalogController < ApplicationController
     config.add_index_field solr_name("creator", :stored_searchable),link_to_search: solr_name("creator", :facetable)
     config.add_index_field solr_name("contributor", :stored_searchable), link_to_search: solr_name("contributor", :facetable)
     config.add_index_field solr_name("venue", :stored_searchable), link_to_search: solr_name("venue", :facetable)
-    config.add_index_field solr_name("description", :stored_searchable), itemprop: 'description', helper_method: :iconify_auto_link
+    config.add_index_field solr_name("description", :stored_searchable), itemprop: 'description', helper_method: :link_to_html_trunc
 
     config.add_index_field solr_name("subject", :stored_searchable), link_to_search: solr_name("subject", :facetable)
     config.add_index_field solr_name("date", :stored_searchable), label: "Date"
