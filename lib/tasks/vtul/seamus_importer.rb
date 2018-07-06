@@ -66,7 +66,7 @@ class SeamusImporter
     def is_performance?(item)
       clip = item.metadata.performance_clip
       recording = item.metadata.link_to_recording
-      if (clip.nil? || clip.empty?) && (recording.nil? || recording.empty?)
+      if (clip.empty? && recording.empty?)
         return false
       else
         return true
@@ -119,10 +119,10 @@ class SeamusImporter
 
     def performance_links(item)
       links = []
-      if !((item.metadata.link_to_recording.nil?) || (item.metadata.link_to_recording.empty?))
+      if !(item.metadata.link_to_recording.empty?)
         links << item.metadata.link_to_recording
       end
-      if !((item.metadata.performance_clip.nil?) || (item.metadata.performance_clip.empty?))
+      if !(item.metadata.performance_clip.empty?)
         links << item.metadata.performance_clip
       end
       return links
@@ -182,7 +182,7 @@ class SeamusImporter
       user.facebook_handle = handle(user_profile.member_facebook_link)
       user.googleplus_handle = handle(user_profile.member_google_link)
         
-      if !( user_profile.member_website_link.nil? || user_profile.member_website_link.blank?)
+      if !( user_profile.member_website_link.blank?)
         wlink = UserLink.find_or_create_by({link: user_profile.member_website_link})
         wlink.link = user_profile.member_website_link
         user.user_links << wlink
@@ -190,7 +190,7 @@ class SeamusImporter
 
       # TODO: Potentially add as new social media via LIBTD-1385
       # For now, add as website
-      if !( user_profile.member_soundcloud_link.nil? || user_profile.member_soundcloud_link.blank?)
+      if !( user_profile.member_soundcloud_link.blank?)
         slink = UserLink.find_or_create_by({link: user_profile.member_soundcloud_link})
         slink.link = user_profile.member_soundcloud_link
         user.user_links << slink

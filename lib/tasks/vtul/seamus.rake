@@ -16,8 +16,7 @@ namespace :seamus do
 
       puts "Attempting to read input xml file: " + input_xml_file
 
-      content = ""
-      open(input_xml_file) do |s| content = s.read end
+      content = File.read(input_xml_file)
 
       wp_authors = Array.new
       wp_author_profiles = Hash.new
@@ -53,8 +52,7 @@ namespace :seamus do
 
       puts "Attempting to read input xml file: " + input_xml_file
 
-      content = ""
-      open(input_xml_file) do |s| content = s.read end
+      content = File.read(input_xml_file)
 
       importer = SeamusImporter.new
       WordPress.parse_wp_authors(content) do | wp_author |
@@ -79,8 +77,7 @@ namespace :seamus do
 
       puts "Attempting to read input xml file: " + input_xml_file
 
-      content = ""
-      open(input_xml_file) do |s| content = s.read end
+      content = File.read(input_xml_file)
 
       items = Array.new
       WordPress.parse_items(content) do | item |
@@ -106,8 +103,7 @@ namespace :seamus do
 
       puts "Attempting to read input xml file: " + input_xml_file
 
-      content = ""
-      open(input_xml_file) do |s| content = s.read end
+      content = File.read(input_xml_file)
 
       authors = Hash.new
       WordPress.parse_wp_authors(content) do | wp_author |
