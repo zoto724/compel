@@ -49,6 +49,7 @@ en:
           duration: Duration
           technical_specs: Technical Specs
           program_notes: Program Notes
+          related_url: Performance Link
   hyrax:
     account_name: My Institution Account Id
     directory:
