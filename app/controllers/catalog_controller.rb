@@ -69,7 +69,7 @@ class CatalogController < ApplicationController
     config.add_index_field solr_name("creator", :stored_searchable),link_to_search: solr_name("creator", :facetable)
     config.add_index_field solr_name("contributor", :stored_searchable), link_to_search: solr_name("contributor", :facetable)
     config.add_index_field solr_name("venue", :stored_searchable), link_to_search: solr_name("venue", :facetable)
-    config.add_index_field solr_name("description", :stored_searchable), itemprop: 'description', helper_method: :iconify_auto_link
+    config.add_index_field solr_name("description", :stored_searchable), itemprop: 'description', helper_method: :link_to_html_trunc
 
     config.add_index_field solr_name("subject", :stored_searchable), link_to_search: solr_name("subject", :facetable)
     config.add_index_field solr_name("date", :stored_searchable), label: "Date"
@@ -77,7 +77,8 @@ class CatalogController < ApplicationController
     config.add_index_field solr_name("duration", :stored_searchable) 
     config.add_index_field solr_name("resource_type", :stored_searchable), link_to_search: solr_name("resource_type", :facetable)
     config.add_index_field solr_name("medium", :stored_searchable), label: "Medium"
-    config.add_index_field solr_name("source", :stored_searchable)
+    config.add_index_field solr_name("related_url", :stored_searchable), label: "Performance Links", helper_method: :iconify_auto_link
+    config.add_index_field solr_name("source", :stored_searchable), helper_method: :iconify_auto_link
     config.add_index_field solr_name("proxy_depositor", :symbol), label: "Depositor", helper_method: :link_to_profile
     config.add_index_field solr_name("depositor"), label: "Owner", helper_method: :link_to_profile
     config.add_index_field solr_name("publisher", :stored_searchable), itemprop: 'publisher', link_to_search: solr_name("publisher", :facetable)

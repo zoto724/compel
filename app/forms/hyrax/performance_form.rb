@@ -5,7 +5,7 @@ module Hyrax
   class PerformanceForm < Hyrax::Forms::WorkForm
     self.model_class = ::Performance
     self.terms += [:composition_id, :venue, :date, :duration,
-                   :resource_type, :medium]
+                   :resource_type, :medium, :related_url]
 
     self.required_fields = [:title, :subject, :creator, 
                             :contributor]
@@ -17,7 +17,7 @@ module Hyrax
     def primary_terms
       [:creator, :title, :venue, :date, :date_created, :contributor,
        :composition_id, :subject, :description, :duration, :keyword,
-       :resource_type, :medium]
+       :resource_type, :medium, :related_url]
     end
     
     # Fields that are automatically drawn on the page below the fold
