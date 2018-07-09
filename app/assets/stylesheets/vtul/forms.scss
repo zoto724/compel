@@ -4,23 +4,23 @@
 
 #masthead {
   .input-group {
-    font-size: 8px;
+    font-size: 16px;
   }
   input, button {
     height: 30px;
     border: none;
-    color: rgba(203,199,199,1.00);
+    color: #323232;
     background-color: white;
     box-shadow: none;
     border-radius: 0;
-    font-size: 11px;
+    font-size: 16px;
     span {
-      font-size: 11px;
+      font-size: 16px;
       text-transform: uppercase;
     }
   }
   .dropdown-toggle {
     margin-left: -1px;
-    border-left: 1px solid rgba(203,199,199,1.00);
+    border-left: 1px solid #323232;
   }
 }
