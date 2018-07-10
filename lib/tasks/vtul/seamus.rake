@@ -124,4 +124,46 @@ namespace :seamus do
       puts 'To run: bin/rake seamus:import_items["input.xml"]'
     end
   end
+
+  desc 'Cleanup for SEAMUS import. Must be run AFTER import_authors and import_items'
+  task cleanup_works: :environment do
+    # Assumption for this task: If the depositor isn't lowercase, then the related creators and contributors are also not lowercase
+    Composition.all.each do | comp |
+      cleanup_work(comp)
+    end
+
+    Performance.all.each do | perf |
+      cleanup_work(perf)
+    end
+  end
+
+  def cleanup_work(work)
+    if work.depositor != work.depositor.downcase
+      puts "Downcasing depositor: " + work.depositor + " for work id: " + work.id
+      work.depositor = work.depositor.downcase
+      work.creator = work.creator.map(&:downcase)
+      work.contributor = work.contributor.map(&:downcase)
+      work.save!
+    end
+
+    pruned_description = work.description.reject { |e| e.to_s.empty? }
+    if work.description != pruned_description
+      puts "Pruning empty descriptions for work id: " + work.id
+      work.description = pruned_description
+      work.save!
+    end
+
+    pruned_score = work.source.reject { |e| e.to_s.empty? }
+    if work.source != pruned_score
+      puts "Pruning empty scores for work id: " + work.id
+      work.source = pruned_score
+      work.save!
+    end
+
+    if work.duration == ""
+      puts "Setting empty duration to nil for work id: " + work.id
+      work.duration = nil
+      work.save!
+    end
+  end
 end
