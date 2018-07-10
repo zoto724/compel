@@ -27,4 +27,11 @@ footer.site-footer {
   color: white;
   font-size: 16px;
 }
-
+footer.site-footer ul.nav li.active > a {
+  color: #555;
+  background-color: #e7e7e7;
+}
+footer.site-footer ul.nav li.active > a:hover {
+  color: #555;
+  background-color: $red
+}
