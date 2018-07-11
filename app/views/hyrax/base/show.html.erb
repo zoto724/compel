@@ -49,6 +49,12 @@
             <%= render('performances', performances: @performances) if controller_name == "compositions" %>
             <%# COMPEL-specific rendering: end %>
           </div>
+
+          <div class="col-sm-12">
+            <h2>Disclaimer</h2>
+            <p><%= t('compel.disclaimer') %></p>
+          </div>
+
         </div>
       </div>
     </div>

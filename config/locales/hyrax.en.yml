@@ -74,3 +74,5 @@ en:
     homepage:
       admin_sets:
         link: "<span class='red'>+ Explore</span> More"
+  compel:
+    disclaimer: "External links are provided as a convenience and for informational purposes only; they do not constitute an endorsement or an approval by COMPEL or Virginia Tech of any of the products, services or opinions of the corporation or organization or individual. COMPEL and Virginia Tech bear no responsibility for the accuracy, legality or content of the external site or for that of subsequent links. Contact the external site for answers to questions regarding its content."
