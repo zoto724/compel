@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get '/about', to: 'static#about'  
+
   get '/user_links/user/:id/link/:link_id/delete', to: 'hyrax/dashboard/profiles#user_link_delete'
   
   mount Riiif::Engine => 'images', as: :riiif if Hyrax.config.iiif_image_server?
