@@ -162,13 +162,14 @@
     }
 
     .explore_photo {
-      height: 450px;
       width: 90%;
-      background:rgba(79,185,184,1.00) image-url('vtul/bug_1.jpg');
+      background:rgba(79,185,184,1.00);
       background-size: cover;
       margin-left: 4%;
       margin-top: 25px;
-      border: 1px solid rgba(252, 71, 59, 1.00);
+      img {
+        width: 100%;
+      }
     }
     .explore_photo_text {
       width: 90%;
