@@ -25,6 +25,7 @@ module Compel
       Hyrax::HomepageController.prepend Hyrax::HomepageControllerOverride
       Hyrax::Dashboard::ProfilesController.prepend Hyrax::Dashboard::ProfilesControllerOverride
       Hyrax::PagesController.prepend Hyrax::PagesControllerOverride
+      MultiValueInput.prepend MultiValueInputOverride
     end
   end
 end
