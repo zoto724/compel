@@ -1,0 +1,14 @@
+.sidebar .profile {
+  padding: 0;
+  .profile-image {
+    img {
+      width: 100%;
+    }
+  }
+}
+@media(min-width: 993px) {
+  .dashboard .sidebar {
+    padding-top: 50px;
+  }
+}
+
