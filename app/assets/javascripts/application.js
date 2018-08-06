@@ -22,4 +22,4 @@
 
 //= require_tree .
 //= require hyrax
-
+//= require vtul/multi_tinymce
