@@ -17,8 +17,8 @@ Blacklight.onLoad(function() {
     $newEditorLi.append($fieldControls);
     window.tinyMCE.init({
       selector: 'textarea#' + $newTextArea.attr('id'),
-      width: 542,
-      height: 293,
+      width: "100%",
+      height: 294,
       init_instance_callback: function (editor) {
         console.log($newEditorLi.find('div.mce-tinymce.mce-container.mce-panel'));
         $newEditorLi.find('div.mce-tinymce.mce-container.mce-panel').show();
