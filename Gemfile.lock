@@ -588,6 +588,8 @@ GEM
       rdf (>= 2.2, < 4.0)
     rdf-xsd (2.2.1)
       rdf (>= 2.2, < 4.0)
+    recaptcha (4.12.0)
+      json
     redic (1.5.0)
       hiredis
     redis (4.0.1)
@@ -769,6 +771,7 @@ DEPENDENCIES
   pg
   puma (~> 3.7)
   rails (~> 5.1.6)
+  recaptcha
   riiif (~> 1.1)
   rsolr (>= 1.0)
   rspec-rails
@@ -786,4 +789,4 @@ DEPENDENCIES
   xray-rails
 
 BUNDLED WITH
-   1.16.2
+   1.16.4
