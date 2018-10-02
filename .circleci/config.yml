@@ -76,7 +76,7 @@ jobs:
 
     - run:
         name: Call Rubocop
-        command: bundle exec rubocop
+        command: bundle exec rubocop --fail-level fatal
 
     - run:
         name: Generate test app, ensure top-level Gemfile.lock is valid
